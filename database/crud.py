@@ -61,12 +61,6 @@ def get_users_by_table(db: Session, table_id: int):
     return db.query(models.UsersTables).filter(models.UsersTables.table_id == table_id).all()
 
 def get_tables_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> list[models.Table]:
-    # all_users_tables = db.query(models.UsersTables).filter(models.UsersTables.user_id == user_id).offset(skip).limit(limit).all()
-    # tables = db.query(models.Table).join(
-    #     models.UsersTables, models.UsersTables.user_id == user_id
-    # ).join(
-    #     models.Table, models.Table.id == models.UsersTables.table_id
-    # ).offset(skip).limit(limit).all()
     tables = db.query(models.Table, models.UsersTables).filter(
         and_(models.UsersTables.user_id == user_id, models.UsersTables.table_id == models.Table.id)
     ).offset(skip).limit(limit).all()
